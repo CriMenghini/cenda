@@ -5,6 +5,7 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy import linalg as LA
+from scipy.sparse import dok_matrix
 
 def r_graph(n=10,p=0.3):
     adj=np.random.choice([1,0],[n,n],p)
@@ -109,6 +110,22 @@ def BFS(root, adjecency_list):
 
 	return level
 
+
+def testConnectIrredA(g):
+    n = len(g.nodes())
+    A = dok_matrix((n,n), dtype=float)
+    for x,i in g.edges():
+        A[x,i] = 1
+        A[i,x] = 1
+    somma = np.identity(n)
+    for x in range(1,n):
+        somma = A**x + somma
+    boolean = True
+    for i in range(0,n):
+        for j in range(0,n):
+            boolean = boolean and somma[i,j] > 0
+	return boolean
+	
 	
 def testConnectLapEig(g):
     n = len(g.nodes())
@@ -123,20 +140,7 @@ def testConnectLapEig(g):
     return seconSmallestEig > 0
     
 	
-def testConnectIrredA(g):
-    n = len(g.nodes())
-    A = np.zeros((n,n))
-    for x,i in g.edges():
-        A[x,i] = 1
-        A[i,x] = 1
-    somma = np.identity(n)
-    for x in range(1,n):
-        somma = LA.matrix_power(A, x) + somma
-    boolean = True
-    for i in range(0,n):
-        for j in range(0,n):
-            boolean = boolean and somma[i,j] > 0
-	return boolean
+
 	
 	
 def testConnectBFS(g):
