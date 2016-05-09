@@ -1,0 +1,63 @@
+import networkx as nx
+import numpy as np
+
+
+### Erdos-Renyi random graphs
+
+#G (n, p) model
+def r_graph(n=10,p=0.3):
+    adj=np.random.choice([1,0],[n,n],p)
+    np.fill_diagonal(adj,1)
+    adj=adj*(adj.T)
+    g=nx.from_numpy_matrix(adj)
+    print_graph(g)
+    return g
+    
+#G (n,m) model:
+
+def r_graph_regular(n=10,m=2,show=True):
+    g=nx.Graph()
+    g.add_nodes_from(range(n))
+    for iteration in range(m):
+        permutation=np.random.permutation(range(n)) 
+        to_connect1=permutation[:(n/2)]  
+        to_connect2=permutation[(n/2):]  
+        links=zip(to_connect1,to_connect2)
+        g.add_edges_from(links)
+        checked=set()
+        if show:print_graph(g)
+        for (i,j) in g.degree().items():
+            
+            if j<iteration+1:
+                if i in checked:
+                    continue
+                if i in to_connect1:
+                    k=to_connect2[to_connect1==i].item()
+                else: k=to_connect1[to_connect2==i].item()
+                h,l=g.edges()[np.random.randint(g.number_of_edges())]
+                while h==i or l==i or h in g[i].keys() or l in g[k].keys() :
+                     h,l=g.edges()[np.random.randint(g.number_of_edges())]
+                
+                if show:print_graph(g,special=True,old_new=[h,l,i,k])                
+                g.add_edge(h,i)
+                g.add_edge(l,k)
+                g.remove_edge(h,l)
+                checked.add(k)
+                checked.add(i)
+                
+    print g.degree()
+    
+def print_graph(g, special=False,old_new=[]):
+    pos=nx.spring_layout(g)
+    nx.draw_networkx_nodes(g,pos,node_color='r',
+                           node_size=500,
+                       alpha=0.8)
+    labels={i:i for i in range(g.number_of_nodes())}
+    nx.draw_networkx_labels(g,pos,labels,font_size=16)
+    if special:
+        nx.draw_networkx_edges(g,pos,edgelist=[(old_new[0],old_new[1]),(old_new[0],old_new[2]),(old_new[1],old_new[3])],edge_color=['r','b','b'],width=3.0,alpha=0.5)
+    nx.draw_networkx_edges(g,pos,width=1.0,alpha=0.5)
+    plt.show(block=False)
+
+
+
