@@ -5,6 +5,9 @@ import numpy as np
 ### Erdos-Renyi random graphs
 
 #G (n, p) model
+
+#n number of nodes
+#p probability to create an edge btw (i,j) for any possible couple of nodes
 def r_graph(n=10,p=0.3):
     adj=np.random.choice([1,0],[n,n],p)
     np.fill_diagonal(adj,1)
@@ -15,6 +18,9 @@ def r_graph(n=10,p=0.3):
     
 #G (n,m) model:
 
+#n number of nodes
+#m degree of regularity of the graph ( each node has exactly m edges)
+#show if you want to check the progression of the constructor
 def r_graph_regular(n=10,m=2,show=True):
     g=nx.Graph()
     g.add_nodes_from(range(n))
@@ -46,6 +52,7 @@ def r_graph_regular(n=10,m=2,show=True):
                 checked.add(i)
                 
     print g.degree()
+    return g
     
 def print_graph(g, special=False,old_new=[]):
     pos=nx.spring_layout(g)
