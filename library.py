@@ -177,40 +177,72 @@ def print_bfs(nods, rt, adj, data ):
 
 #funzione per trovare connettività con matrice di adiacenza sparse
 def testConnectIrredA(g):
-    n = len(g.nodes())
-    A = dok_matrix((n,n), dtype=float)
-    for x,i in g.edges():
-        A[x,i] = 1
-        A[i,x] = 1
-    somma = np.identity(n)
-    for x in range(1,n):
-        somma = A**x + somma
-    boolean = True
-    for i in range(0,n):
-        for j in range(0,n):
-            boolean = boolean and somma[i,j] > 0
-	return boolean
+	n = len(g.nodes())
+	A = dok_matrix((n,n), dtype=float)
+	for x,i in g.edges():
+		A[x,i] = 1
+		A[i,x] = 1
+	somma = np.identity(n)
+	print 'Computing matrix equal to the I + sum(A**x)..'
+	for x in range(1,n):
+		somma = A**x + somma
+	boolean = True
+	print 'Checking if the matrix computed is positive..'
+	for i in range(0,n):
+		for j in range(0,n):
+			boolean = boolean and somma[i,j] > 0
+	if boolean:
+		print 'every value of the computed matrix is positive'
+		print 'then the graph is connected'
+		return True
+	else:
+		print 'the computed matrix is not totally positve'
+		print 'then the graph is disconnected'
+		return False
 	
 
 #funzione per trovare connettività con laplaciana
 def testConnectLapEig(g):
-    n = len(g.nodes())
-    L = np.zeros((n,n))
-    for x,i in g.edges():
-        L[x,i] = -1
-        L[i,x] = -1
-    for x in g.nodes():
-        L[x,x] = g.degree(x)
-    w, v = LA.eig(L)
-    seconSmallestEig = sorted(list(w))[1]
-    return seconSmallestEig > 0
-    
-	
+	n = len(g.nodes())
+	L = np.zeros((n,n))
+	for x,i in g.edges():
+		L[x,i] = -1
+		L[i,x] = -1
+	for x in g.nodes():
+		if (x,x) in g.edges():
+			L[x,x] = g.degree(x)-2
+		else:
+			L[x,x] = g.degree(x)
+	w, v = LA.eig(L)
+	w = sorted(list(w))
+	print 'the eigen values of L are:'
+	for x in w:
+		print x
+	seconSmallestEig = w[1]
+	print ''
+	print 'the second smallest eigenvalue is:', seconSmallestEig
+	if seconSmallestEig > 0 :
+		print 'which is positive: the graph is connected'
+		return True
+	else:
+		print 'which is negative: the graph is disconnected'
+		return False
+		
+
 
 #funzione per trovare connettività con BFS	
 	
 def testConnectBFS(g):
-    Adj = {n : g.neighbors(n) for n in g.nodes()}
-    level = BFS(g.nodes()[0], Adj)
-    return len(level.keys()) == len(g.nodes())	
+	Adj = {n : g.neighbors(n) for n in g.nodes()}
+	level = BFS(g.nodes()[0], Adj)
+	print ''
+	print '# of explored nodes', len(level.keys())
+	print '# of total nodes', len(g.nodes())
+	boool = len(level.keys()) == len(g.nodes())
+	if boool:
+		print 'the graph is connected since we have explored all nodes'
+		return True
+	else:
+		print "the graph is disconnected since we didn't reach all nodes"
+		return False
 	

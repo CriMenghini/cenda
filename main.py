@@ -39,12 +39,15 @@ print "testing connectivity of graphs.."
 print ''
 
 print "algebraic method 1 (irreducibility)"
-print "is the random graph connected:", testConnectIrredA(g)
+print "is the random graph connected:"
+print testConnectIrredA(g)
 print ''
 
 print "algebraic method 2 (eigenvalue of the Laplacianmatrix)"
-print "is the random graph connected:", testConnectLapEig(g)
+print "is the random graph connected:"
+print testConnectLapEig(g)
 print ''
 
 print "breadth-first based algorithm"
-print "is the random graph connected:", testConnectBFS(g)
+print "is the random graph connected:"
+print testConnectBFS(g)
