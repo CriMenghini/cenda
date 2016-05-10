@@ -17,7 +17,7 @@ Some graph models and algorithms to be applied on Data Center topology
  - algebraic method 1 (irreducibility);
  - algebraic method 2 (eigenvalue of the Laplacianmatrix);
  - breadth-first based algorithm.
- - 
+
 * PART 4 : Fat Tree 
  - Generate a fat tree topology graph 
  - Find all paths connecting a given source ToR and a given destination ToR.
