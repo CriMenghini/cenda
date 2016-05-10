@@ -1,0 +1,22 @@
+A fat tree topology is a particular tree data structure in which each node is k-port switch and that can support up to (k^3)/4` leafs (hosts). This topology comprises k pods with two layers of k/2 switches each. In each pod, each aggregation switch is connected to all the k/2 edge switches and each edge switch is connected k/2 hosts. There are (k/2)^2` core switches, each of them connected to one aggregation switch per pod.
+    
+This program generates a fat tree given in input the number of ports the user would like to have on each switch of the network. Than after generating the fat tree, the program is able to compute all the shortest paths between any pair of edge switches and also all the disjoint shortest path between any pair of edges switches.
+We report the description of the functionality that each declared function implements: 
+
+generatePod(k, numPod): 
+The POD is the fundamental block of a fat tree. Each POD is composed by k number of switches each one with k ports. We have k/2 aggregation switches and k/2 edge switches. Between the two types of switches we have a bipartite interconection structure where each edge-switch is connected to each aggreate-switch. Then each edge-switch is connected to k/2 servers and each aggregate-switch is connected to k/2 core switch
+
+generateFatTree(k):
+A fat tree is composed by k PODs. Each POD is connected to all the core switches by
+means of the aggregate-switches: each one of those is connected to k/2 core switches
+
+dijkstra_all_shortest_paths(G, source, target, weight=None):
+This function is the networkX's implementation of the "all-shortest-paths-problem" algorithm and is used as ground truth for our implementation. It uses a modified version of the dijkstra algorithm that compute  the shortest path length and predecessors on shortest paths.
+
+disjointPaths(G, k, source, target):
+The disjoint shortest paths are the ones that do not have any common edge or vertex,
+with the exception of the source and the target, here we compute those path in a naive
+way concatenate the neighbours of the source with the neighbours of the target by means of the common core-switches 
+
+allShortestPaths(G, k, source, target):
+We compute the shortest paths between two elements by iterating over the neighbors at each level: edge, aggregate and core. We use the labeling used during the creation of the fat tree to understand the type of switch we encounter during the iteration.
