@@ -8,7 +8,7 @@ from numpy import linalg as LA
 from scipy.sparse import dok_matrix
 
 def r_graph(n=10,p=0.3):
-    adj=np.random.choice([1,0],[n,n],p)
+    adj=np.random.choice([1,0],[n,n],np.sqrt(p))
     np.fill_diagonal(adj,1)
     adj=adj*(adj.T)
     g=nx.from_numpy_matrix(adj)
