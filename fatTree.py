@@ -127,10 +127,9 @@ def allShortestPaths(G, k, source, target):
 def main():  
     user = int(raw_input("\n\nHow many ports per swtich do you want? Please, just even numbers: "))
     G = generateFatTree(user)
-    #nx.draw(G, with_labels=True)
     print "Those are the Edge Switches:"
     print sorted(filter(None, map(lambda node: node[0] if node[1]["type"] == "edge" else None,G.nodes(data=True))))
-    print "\nWhich path would you like to know?\n"
+    print "Which path would you like to know?\n"
     again = 1
     while again == 1:
         source = raw_input("Insert source node: ")
@@ -144,6 +143,7 @@ def main():
         #Uncomment to use smart shortest paths
         #print [path for path in smart_all_shortest_paths(G, source, target)]
         again = raw_input("Do you want to continue?(0: NO, 1: YES)")
+    nx.draw(G, with_labels=True)
     
 if __name__== "__main__":
     main() 
