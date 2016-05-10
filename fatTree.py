@@ -7,6 +7,7 @@ Created on Mon May  9 16:48:25 2016
 
 import networkx as nx
 import matplotlib.pyplot as plt
+import pylab
 
 ''' This program generates a fat tree given in input the number of ports the user would like
     to have on each switch of the network. Than after generating the fat tree, the program
@@ -92,11 +93,14 @@ def disjointPaths(G, k, source, target):
     paths = {}
     firstPath = [[source,aggS] for aggS in G.neighbors(source)]
     secondPath = [[aggT,target] for aggT in G.neighbors(target)]
-    for x in range(0,k/2):
-        if x < k/4:
-            paths[x] = firstPath[x] + ["c"+str(x)] + secondPath[x]
-        else:
-            paths[x] = firstPath[x] + ["c"+str(x+k/2)] + secondPath[x]
+    if source[1]==target[1]:
+        paths = map(lambda node: [source,node,target], G.neighbors(source))
+    else:
+        for x in range(0,k/2):
+            if x < k/4:
+                paths[x] = firstPath[x] + ["c"+str(x)] + secondPath[x]
+            else:
+                paths[x] = firstPath[x] + ["c"+str(x+k/2)] + secondPath[x]
     return paths
     
 def allShortestPaths(G, k, source, target):
@@ -107,15 +111,18 @@ def allShortestPaths(G, k, source, target):
     counter = 0
     paths = {}
     tPod = target[1]
-    for aggS in G.neighbors(source):
-        for core in G.neighbors(aggS):
-            #raw_input(core)
-            if core[0]=="c":
-                for aggT in G.neighbors(core):
-                    #raw_input(aggT)
-                    if aggT[0:2]=="a"+tPod:
-                        paths[counter]=[source, aggS, core ,aggT, target]  
-                        counter +=1
+    if source[1]==target[1]:
+        paths = map(lambda node: [source,node,target], G.neighbors(source))
+    else:
+        for aggS in G.neighbors(source):
+            for core in G.neighbors(aggS):
+                #raw_input(core)
+                if core[0]=="c":
+                    for aggT in G.neighbors(core):
+                        #raw_input(aggT)
+                        if aggT[0:2]=="a"+tPod:
+                            paths[counter]=[source, aggS, core ,aggT, target]  
+                            counter +=1
     return paths
         
             
@@ -144,6 +151,8 @@ def main():
         #print [path for path in smart_all_shortest_paths(G, source, target)]
         again = raw_input("Do you want to continue?(0: NO, 1: YES)")
     nx.draw(G, with_labels=True)
+    pylab.savefig(str(user)+"-FatTree")
+    
     
 if __name__== "__main__":
     main() 
