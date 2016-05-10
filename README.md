@@ -8,7 +8,7 @@ Some graph models and algorithms to be applied on Data Center topology
   - G(n,m) model : a graph is chosen uniformly at random from the collection of all graphs which have n nodes and m edges;
   - G(n,p) model : a graph is constructed by connecting nodes randomly. Each edge is included in the graph with probability p independent from every other edge. 
 
-* PART 3 : BFS.py 
+* PART 2 : BFS.py 
  - Implement the breadth-first search for all nodes of the graph;
  - Define the function to create a different graph for each different node choosen as root;
  - Draw the graph related to a specific root.
