@@ -118,6 +118,63 @@ def BFS(root, adjecency_list):
 
 	return level
 
+def BFS_all_nodes(list_node, ad_list):
+    """This function return the depth of each node respect to different roots.
+    - list_node is the list of nodes
+    - ad_list is is a dictionary whose keys are the node of the graph and the respective value is the list of 
+    neighbors"""
+    
+    depth = {}
+    # For each node perform the BFS algorithm
+    for n in list_node:
+        depth[n] = BFS(n, ad_list)[0]
+    
+    return depth
+    
+def create_edges(node, adj_list, df):
+    """This function returns the dictionary {root : list of edges}.
+    - node is the list of nodes;
+    - adj_list is a dictionary whose keys are the node of the graph and the respective value is the list of 
+    neighbors;
+    - df is the dataframe that contains the result of BFS for each node."""
+
+    # Initialize the return of the function    
+    edges_list = {}
+    # For each node
+    for n in node:
+        edges_list[n] = []
+        # Get the max depth
+        maxim = graphs[n].max(0)
+        # Its parent
+        parents = BFS(n, adj_list)[1]
+        # And the create the edges
+        for i in range(1, maxim+1):
+            next_step = df[df[n] == i].index.tolist()
+            for ns in next_step:
+                edges_list[n].append((parents[ns], ns))
+    
+    return edges_list
+
+def print_bfs(nods, rt, adj, data ):
+    """This function draw the graph related to each different root.
+    - list_edges is a dictionary: {root : list of edges};
+    - nods is the list of all nodes of the graph;
+    - rt is the root;
+    - adj is is a dictionary whose keys are the node of the graph and the respective value is the list of 
+    neighbors;
+    - data is the dataframe that contains the result of BFS for each node."""
+    
+    # Define the empty graph
+    G = nx.Graph()
+    # Add nodes to the graph
+    G.add_nodes_from(nods)
+    # List of edges
+    G.add_edges_from(create_edges(nods, adj, data)[rt])
+    
+    pos=nx.spring_layout(G)
+    # Draw the graph
+    nx.draw(G, pos, with_labels = True)
+
 #funzione per trovare connettività con matrice di adiacenza sparse
 def testConnectIrredA(g):
     n = len(g.nodes())
