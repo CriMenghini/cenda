@@ -28,12 +28,22 @@ else:
     g=r_graph_regular(n,m,show)
 
 
+ins = int(raw_input('\nIf you want to perform the BFS only for one node type 0, otherwise type 1\n'))
 
 #compute the adiacence matrix as a dict 
 Adj = {n : g.neighbors(n) for n in g.nodes()}
 
-print '\n \n Exemple of BFS on root = 2'
-print BFS(2,Adj)
+if ins = 0:
+    print '\n \n BFS performed on root = 2'
+    print BFS(2,Adj)
+else:
+    print '\n \n BFS performed on each node of the graph'
+    print pd.DataFrame.from_dict(BFS_all_nodes(g.nodes(), Adj))
+    
+root = int(raw_input('\n Choose a root( between 0 and the number of nodes-1) to perform the BFS algorithm and draw the obtained graph:'))
+
+graphs = pd.DataFrame.from_dict(BFS_all_nodes(g.nodes(), Adj))
+print_bfs(g.nodes(), root , Adj, graphs)
 
 print "testing connectivity of graphs.."
 print ''
