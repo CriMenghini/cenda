@@ -9,3 +9,6 @@ Some graph models and algorithms to be applied on Data Center topology
   - G(n,p) model : a graph is constructed by connecting nodes randomly. Each edge is included in the graph with probability p independent from every other edge. 
 
 * BFS.py : implement the breadth-first search for all nodes of the graph.
+
+*part 4 : generate a fat tree topology graph and find all paths connecting a given source ToR and a given destination ToR. Find also all disjoint paths.y
+
