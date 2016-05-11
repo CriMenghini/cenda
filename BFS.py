@@ -5,7 +5,7 @@ Created on Mon May  9 17:38:44 2016
 @author: cristinamenghini
 """
 
-import networkx as nx
+import networkx as nx		
 import pandas as pd
 
 def BFS(root, adjecency_list):
@@ -53,7 +53,6 @@ def BFS(root, adjecency_list):
     
     return level, parent
     
-# If you want to do the exploration definig as root each different node of the graph
 def BFS_all_nodes(list_node, ad_list):
     """This function return the depth of each node respect to different roots.
     - list_node is the list of nodes
@@ -80,7 +79,7 @@ def create_edges(node, adj_list, df):
     for n in node:
         edges_list[n] = []
         # Get the max depth
-        maxim = graphs[n].max(0)
+        maxim = df[n].max(0)
         # Its parent
         parents = BFS(n, adj_list)[1]
         # And the create the edges
@@ -110,29 +109,30 @@ def print_bfs(nods, rt, adj, data ):
     pos=nx.spring_layout(G)
     # Draw the graph
     nx.draw(G, pos, with_labels = True)
-
+    
+    
 # Example 
 
 # Define the graph
-G = nx.Graph()
+#G = nx.Graph()
 # List of nodes
-nodes = ['a','z','s','x','d','c','v','f']
+#nodes = ['a','z','s','x','d','c','v','f']
 # Add nodes to the graph
-G.add_nodes_from(nodes)
+#G.add_nodes_from(nodes)
 # List of edges
-edges = [('a','z'),('a','s'),('x','s'),('x','d'),('x','c'),('d','f'),('c','f'),('f','v'),('c','v')]
+#edges = [('a','z'),('a','s'),('x','s'),('x','d'),('x','c'),('d','f'),('c','f'),('f','v'),('c','v')]
 # Add edges to the graph
-G.add_edges_from(edges)
+#G.add_edges_from(edges)
 
 # Define the dictionary {node : list of neighbors}
-Adj = {n : G.neighbors(n) for n in nodes}
+#Adj = {n : G.neighbors(n) for n in nodes}
 
 # Apply the algorithm respect to root 's'
-BFS('s', Adj)
+#BFS('s', Adj)
 
 # Create a dataframe whose each point value (i,j) is the depth of j respect root i.(the matrix is symmetric) 
-graphs = pd.DataFrame.from_dict(BFS_all_nodes(nodes, Adj))
+#graphs = pd.DataFrame.from_dict(BFS_all_nodes(nodes, Adj))
 
 # Print the graph for a specific root
-print_bfs(nodes, 'a', Adj, graphs)
+#print_bfs(nodes, 'a', Adj, graphs)
 
