@@ -7,6 +7,7 @@ Created on Mon May  9 17:38:44 2016
 
 import networkx as nx		
 import pandas as pd
+from random import randint
 
 def BFS(root, adjecency_list):
     """This function returns a dictionary whose keys are the nodes and the values are the respective 
@@ -92,7 +93,6 @@ def create_edges(node, adj_list, df):
 
 def print_bfs(nods, rt, adj, data ):
     """This function draw the graph related to each different root.
-    - list_edges is a dictionary: {root : list of edges};
     - nods is the list of all nodes of the graph;
     - rt is the root;
     - adj is is a dictionary whose keys are the node of the graph and the respective value is the list of 
@@ -108,31 +108,50 @@ def print_bfs(nods, rt, adj, data ):
     
     pos=nx.spring_layout(G)
     # Draw the graph
-    nx.draw(G, pos, with_labels = True)
+    #nx.draw(G, pos, with_labels = True)
+    levels = BFS(rt, adj)[0]
+    maxs = data[rt].max(0) 
+    colors = ['#%06X' % randint(0, 0xFFFFFF) for i in range(10)]  
+    nx.draw_networkx_nodes(G,pos,
+                       nodelist=[rt],
+                       node_color= 'r',
+                       node_size=500, alpha = 0.8)
+    for i in range(1,maxs+1):
+        nx.draw_networkx_nodes(G,pos,
+                       nodelist=[k for k in nodes if levels[k] == i],
+                       node_color= colors[i],
+                       node_size=500, alpha = 0.8)
+    
+    nx.draw_networkx_edges(G,pos,
+                       edgelist=create_edges(nods, adj, data)[rt],
+                       width=2)
+    labels = {n : n for n in nods}
+    nx.draw_networkx_labels(G,pos,labels,font_size=16)
+    
     
     
 # Example 
 
 # Define the graph
-#G = nx.Graph()
+G = nx.Graph()
 # List of nodes
-#nodes = ['a','z','s','x','d','c','v','f']
+nodes = ['a','z','s','x','d','c','v','f']
 # Add nodes to the graph
-#G.add_nodes_from(nodes)
+G.add_nodes_from(nodes)
 # List of edges
-#edges = [('a','z'),('a','s'),('x','s'),('x','d'),('x','c'),('d','f'),('c','f'),('f','v'),('c','v')]
+edges = [('a','z'),('a','s'),('x','s'),('x','d'),('x','c'),('d','f'),('c','f'),('f','v'),('c','v')]
 # Add edges to the graph
-#G.add_edges_from(edges)
+G.add_edges_from(edges)
 
 # Define the dictionary {node : list of neighbors}
-#Adj = {n : G.neighbors(n) for n in nodes}
+Adj = {n : G.neighbors(n) for n in nodes}
 
 # Apply the algorithm respect to root 's'
-#BFS('s', Adj)
+BFS('s', Adj)
 
 # Create a dataframe whose each point value (i,j) is the depth of j respect root i.(the matrix is symmetric) 
-#graphs = pd.DataFrame.from_dict(BFS_all_nodes(nodes, Adj))
+graphs = pd.DataFrame.from_dict(BFS_all_nodes(nodes, Adj))
 
 # Print the graph for a specific root
-#print_bfs(nodes, 'a', Adj, graphs)
+print_bfs(nodes, 'a', Adj, graphs)
 
