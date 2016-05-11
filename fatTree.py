@@ -154,8 +154,8 @@ def main():
     pylab.savefig(str(user)+"-FatTree")
     
     
-if __name__== "__main__":
-    main() 
+#if __name__== "__main__":
+ #   main() 
     
     
 
