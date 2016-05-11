@@ -33,7 +33,7 @@ ins = int(raw_input('\nIf you want to perform the BFS only for one node type 0, 
 #compute the adiacence matrix as a dict 
 Adj = {n : g.neighbors(n) for n in g.nodes()}
 
-if ins = 0:
+if ins == int(0):
     print '\n \n BFS performed on root = 2'
     print BFS(2,Adj)
 else:
@@ -47,17 +47,17 @@ print_bfs(g.nodes(), root , Adj, graphs)
 
 print "testing connectivity of graphs.."
 print ''
-
+print '-----------------------------------'
 print "algebraic method 1 (irreducibility)"
 print "is the random graph connected:"
 print testConnectIrredA(g)
 print ''
-
+print '-----------------------------------'
 print "algebraic method 2 (eigenvalue of the Laplacianmatrix)"
 print "is the random graph connected:"
 print testConnectLapEig(g)
 print ''
-
+print '-----------------------------------'
 print "breadth-first based algorithm"
 print "is the random graph connected:"
 print testConnectBFS(g)

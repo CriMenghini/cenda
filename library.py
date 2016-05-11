@@ -13,6 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy import linalg as LA
 from scipy.sparse import dok_matrix
+import pandas as pd
 
 def r_graph(n=10,p=0.3):
     adj=np.random.choice([1,0],[n,n],np.sqrt(p))
@@ -177,13 +178,16 @@ def print_bfs(nods, rt, adj, data ):
 
 #funzione per trovare connettività con matrice di adiacenza sparse
 def testConnectIrredA(g):
+	print ''
+	print '-----'
 	n = len(g.nodes())
 	A = dok_matrix((n,n), dtype=float)
 	for x,i in g.edges():
-		A[x,i] = 1
-		A[i,x] = 1
+		if x != i :
+			A[x,i] = 1
+			A[i,x] = 1
 	somma = np.identity(n)
-	print 'Computing matrix equal to the I + sum(A**x)..'
+	print 'Computing matrix equal to: I + sum(A^x)..'
 	for x in range(1,n):
 		somma = A**x + somma
 	boolean = True
@@ -192,17 +196,21 @@ def testConnectIrredA(g):
 		for j in range(0,n):
 			boolean = boolean and somma[i,j] > 0
 	if boolean:
-		print 'every value of the computed matrix is positive'
+		print 'Every value of the computed matrix is positive,'
 		print 'then the graph is connected'
+		print '-----'
 		return True
 	else:
-		print 'the computed matrix is not totally positve'
+		print 'The computed matrix is not totally positve,'
 		print 'then the graph is disconnected'
+		print '-----'
 		return False
 	
 
 #funzione per trovare connettività con laplaciana
 def testConnectLapEig(g):
+	print ''
+	print '-----'
 	n = len(g.nodes())
 	L = np.zeros((n,n))
 	for x,i in g.edges():
@@ -216,17 +224,25 @@ def testConnectLapEig(g):
 	w, v = LA.eig(L)
 	w = sorted(list(w))
 	print 'the eigen values of L are:'
+	c = 0
 	for x in w:
-		print x
-	seconSmallestEig = w[1]
+		print float(np.where(x < 1e-15, 0, x))
+		c = c + 1
+		if c == 4:
+			print 'and more..'
+			break
+	seconSmallestEig = float(np.where(w[1] < 1e-15, 0, w[1]))
 	print ''
 	print 'the second smallest eigenvalue is:', seconSmallestEig
 	if seconSmallestEig > 0 :
 		print 'which is positive: the graph is connected'
+		print '-----'
 		return True
 	else:
 		print 'which is negative: the graph is disconnected'
+		print '-----'
 		return False
+	
 		
 
 
@@ -236,13 +252,16 @@ def testConnectBFS(g):
 	Adj = {n : g.neighbors(n) for n in g.nodes()}
 	level = BFS(g.nodes()[0], Adj)
 	print ''
+	print '-----'
 	print '# of explored nodes', len(level.keys())
 	print '# of total nodes', len(g.nodes())
 	boool = len(level.keys()) == len(g.nodes())
 	if boool:
 		print 'the graph is connected since we have explored all nodes'
+		print '-----'
 		return True
 	else:
 		print "the graph is disconnected since we didn't reach all nodes"
+		print '-----'
 		return False
 	
