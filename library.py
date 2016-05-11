@@ -184,7 +184,7 @@ def print_bfs(nods, rt, adj, data ):
                        node_size=500, alpha = 0.8)
     for i in range(1,maxs+1):
         nx.draw_networkx_nodes(G,pos,
-                       nodelist=[k for k in nodes if levels[k] == i],
+                       nodelist=[k for k in nods if levels[k] == i],
                        node_color= colors[i],
                        node_size=500, alpha = 0.8)
     
