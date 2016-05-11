@@ -28,7 +28,7 @@ else:
     g=r_graph_regular(n,m,show)
 
 
-ins = int(raw_input('\nIf you want to perform the BFS only for one node type 0, otherwise type 1\n'))
+ins = int(raw_input('\n 0: Perform the BFS only for one node type 0\n 1: Perform the algorithm on each node\n [0/1]: '))
 
 #compute the adiacence matrix as a dict 
 Adj = {n : g.neighbors(n) for n in g.nodes()}
@@ -39,7 +39,7 @@ if ins == int(0):
 else:
     print '\n \n BFS performed on each node of the graph'
     print pd.DataFrame.from_dict(BFS_all_nodes(g.nodes(), Adj))
-    
+
 root = int(raw_input('\n Choose a root( between 0 and the number of nodes-1) to perform the BFS algorithm and draw the obtained graph:'))
 
 graphs = pd.DataFrame.from_dict(BFS_all_nodes(g.nodes(), Adj))
