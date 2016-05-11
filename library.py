@@ -175,6 +175,7 @@ def print_bfs(nods, rt, adj, data ):
     pos=nx.spring_layout(G)
     # Draw the graph
     nx.draw(G, pos, with_labels = True)
+    plt.show()
 
 
 #funzione per trovare connettività con matrice di adiacenza sparse
