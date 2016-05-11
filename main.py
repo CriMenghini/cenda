@@ -68,6 +68,6 @@ op=int(raw_input('\nType:\n 0: To stop \n 1: To see the FatTree implementation '
 if op == 0:
     main()
 else:
-    print 'Cendra thanks you. Goodbye!'
+    print 'Cenda thanks you. Goodbye!'
 
-print 'Cendra thanks you. Goodbye!'
+print 'Cenda thanks you. Goodbye!'
