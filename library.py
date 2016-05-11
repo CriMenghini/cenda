@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 from numpy import linalg as LA
 from scipy.sparse import dok_matrix
 import pandas as pd
+from random import randint
 
 def r_graph(n=10,p=0.3):
     adj=np.random.choice([1,0],[n,n],np.sqrt(p))
@@ -158,7 +159,6 @@ def create_edges(node, adj_list, df):
 
 def print_bfs(nods, rt, adj, data ):
     """This function draw the graph related to each different root.
-    - list_edges is a dictionary: {root : list of edges};
     - nods is the list of all nodes of the graph;
     - rt is the root;
     - adj is is a dictionary whose keys are the node of the graph and the respective value is the list of 
@@ -174,7 +174,25 @@ def print_bfs(nods, rt, adj, data ):
     
     pos=nx.spring_layout(G)
     # Draw the graph
-    nx.draw(G, pos, with_labels = True)
+    #nx.draw(G, pos, with_labels = True)
+    levels = BFS(rt, adj)[0]
+    maxs = data[rt].max(0) 
+    colors = ['#%06X' % randint(0, 0xFFFFFF) for i in range(10)]  
+    nx.draw_networkx_nodes(G,pos,
+                       nodelist=[rt],
+                       node_color= 'r',
+                       node_size=500, alpha = 0.8)
+    for i in range(1,maxs+1):
+        nx.draw_networkx_nodes(G,pos,
+                       nodelist=[k for k in nodes if levels[k] == i],
+                       node_color= colors[i],
+                       node_size=500, alpha = 0.8)
+    
+    nx.draw_networkx_edges(G,pos,
+                       edgelist=create_edges(nods, adj, data)[rt],
+                       width=2)
+    labels = {n : n for n in nods}
+    nx.draw_networkx_labels(G,pos,labels,font_size=16)
     plt.show()
 
 
