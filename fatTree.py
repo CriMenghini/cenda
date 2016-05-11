@@ -152,7 +152,7 @@ def main():
         again = raw_input("Do you want to continue?(0: NO, 1: YES)")
     nx.draw(G, with_labels=True)
     pylab.savefig(str(user)+"-FatTree")
-    
+    plt.show()
     
 #if __name__== "__main__":
  #   main() 
