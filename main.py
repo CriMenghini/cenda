@@ -71,7 +71,6 @@ op=int(raw_input('\nType:\n 0: To see the FatTree implementation \n 1: To stop \
 
 if op == 0:
     main()
-else:
-    print 'Cenda thanks you. Goodbye!'
+
 
 print 'Cenda thanks you. Goodbye!'
