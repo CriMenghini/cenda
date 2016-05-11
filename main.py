@@ -6,7 +6,7 @@ Created on Tue May 10 15:09:06 2016
 """
 
 from library import *
-from fatree import *
+from fatTree import *
 
 ## prima domanda al prof.
 #tipo1 è una variabile booleana, true se dice che vuole solo random_graph(n,p false se vuole il regular_random_graph)
