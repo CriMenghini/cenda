@@ -6,6 +6,7 @@ Created on Tue May 10 15:09:06 2016
 """
 
 from library import *
+from fatree import *
 
 ## prima domanda al prof.
 #tipo1 è una variabile booleana, true se dice che vuole solo random_graph(n,p false se vuole il regular_random_graph)
@@ -61,3 +62,12 @@ print '-----------------------------------'
 print "breadth-first based algorithm"
 print "is the random graph connected:"
 print testConnectBFS(g)
+
+op=int(raw_input('\nType:\n 0: To stop \n 1: To see the FatTree implementation '))
+
+if op == 0:
+    main()
+else:
+    print 'Cendra thanks you. Goodbye!'
+
+print 'Cendra thanks you. Goodbye!'
