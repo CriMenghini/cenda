@@ -75,50 +75,50 @@ def print_graph(g, special=False,old_new=[]):
     plt.show()
 	
 def BFS(root, adjecency_list):
-	"""This function returns a dictionary whose keys are the nodes and the values are the respective 
-	distances from the root.
-	- root : is the departure node
-	- adjecency_list : is a dictionary whose keys are the node of the graph and the respective value is the list of 
-	neighbors"""
-		
-	# Initialize the dictionary of level
-	level = { root : 0 }
-	# Define the dictionary of parents {node : {set of parents}}
-	parent = { root : set()}
-
-	# Counter 'i' for the search level
-	i = 1
-
-	# Define the frontiers as the list of nodes that we reach in the previous step( respect i-1 level)
-	frontier = [root]
-
-	# Loop
-	while frontier != []:
-		
-		# Get the list of nodes in the frontier
-		level_keys = level.keys()
-		# Initialize the new frontier list as empty
-		next = [] 
-		
-		# For each node in the frontier that corresponds to level i-1
-		for u in frontier:
-			# For each node in the adjecency list of u
-			for v in adjecency_list[u]:
-				# If the node has not already been discovered
-				if v not in level_keys:
-					# Add it in the level dictionary
-					level[v] = i
-					# define u as ita parent
-					parent[v] = u
-					# And append it to the new level frontier
-					next.append(v)
-		frontier = next
-		
-		# Next level
-		i += 1
-
-	return level
-
+    """This function returns a dictionary whose keys are the nodes and the values are the respective 
+    distances from the root.
+    - root : is the departure node
+    - adjecency_list : is a dictionary whose keys are the node of the graph and the respective value is the list of 
+    neighbors"""
+        
+    # Initialize the dictionary of level
+    level = { root : 0 }
+    # Define the dictionary of parents {node : {set of parents}}
+    parent = { root : set()}
+    
+    # Counter 'i' for the search level
+    i = 1
+    
+    # Define the frontiers as the list of nodes that we reach in the previous step( respect i-1 level)
+    frontier = [root]
+    
+    # Loop
+    while frontier != []:
+        
+        # Get the list of nodes in the frontier
+        level_keys = level.keys()
+        # Initialize the new frontier list as empty
+        next = [] 
+        
+        # For each node in the frontier that corresponds to level i-1
+        for u in frontier:
+            # For each node in the adjecency list of u
+            for v in adjecency_list[u]:
+                # If the node has not already been discovered
+                if v not in level_keys:
+                    # Add it in the level dictionary
+                    level[v] = i
+                    # define u as ita parent
+                    parent[v] = u
+                    # And append it to the new level frontier
+                    next.append(v)
+        frontier = next
+        
+        # Next level
+        i += 1
+    
+    return level, parent
+    
 def BFS_all_nodes(list_node, ad_list):
     """This function return the depth of each node respect to different roots.
     - list_node is the list of nodes
@@ -131,7 +131,7 @@ def BFS_all_nodes(list_node, ad_list):
         depth[n] = BFS(n, ad_list)[0]
     
     return depth
-    
+
 def create_edges(node, adj_list, df):
     """This function returns the dictionary {root : list of edges}.
     - node is the list of nodes;
@@ -145,7 +145,7 @@ def create_edges(node, adj_list, df):
     for n in node:
         edges_list[n] = []
         # Get the max depth
-        maxim = graphs[n].max(0)
+        maxim = df[n].max(0)
         # Its parent
         parents = BFS(n, adj_list)[1]
         # And the create the edges
@@ -175,6 +175,7 @@ def print_bfs(nods, rt, adj, data ):
     pos=nx.spring_layout(G)
     # Draw the graph
     nx.draw(G, pos, with_labels = True)
+
 
 #funzione per trovare connettività con matrice di adiacenza sparse
 def testConnectIrredA(g):
