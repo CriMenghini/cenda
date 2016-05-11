@@ -251,7 +251,7 @@ def testConnectLapEig(g):
 	
 def testConnectBFS(g):
 	Adj = {n : g.neighbors(n) for n in g.nodes()}
-	level = BFS(g.nodes()[0], Adj)
+	level = BFS(g.nodes()[0], Adj)[0]
 	print ''
 	print '-----'
 	print '# of explored nodes', len(level.keys())
