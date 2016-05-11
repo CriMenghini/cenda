@@ -63,7 +63,7 @@ print "breadth-first based algorithm"
 print "is the random graph connected:"
 print testConnectBFS(g)
 
-op=int(raw_input('\nType:\n 0: To stop \n 1: To see the FatTree implementation '))
+op=int(raw_input('\nType:\n 0: To see the FatTree implementation \n 1: To stop \n '))
 
 if op == 0:
     main()
