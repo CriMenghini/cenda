@@ -85,7 +85,7 @@ def BFS(root, adjecency_list):
     # Initialize the dictionary of level
     level = { root : 0 }
     # Define the dictionary of parents {node : {set of parents}}
-    parent = { root : set()}
+    parent = { root : root}
     
     # Counter 'i' for the search level
     i = 1
@@ -125,11 +125,13 @@ def BFS_all_nodes(list_node, ad_list):
     - list_node is the list of nodes
     - ad_list is is a dictionary whose keys are the node of the graph and the respective value is the list of 
     neighbors"""
-    
     depth = {}
     # For each node perform the BFS algorithm
     for n in list_node:
-        depth[n] = BFS(n, ad_list)[0]
+        if len(ad_list[n]) == 0:
+            depth[n] = {k:-1 for k in range(len(list_node))}
+        else:
+            depth[n] = BFS(n, ad_list)[0]
     
     return depth
 
@@ -146,11 +148,11 @@ def create_edges(node, adj_list, df):
     for n in node:
         edges_list[n] = []
         # Get the max depth
-        maxim = df[n].max(0)
+        maxim = int(df[n].max(0,skipna=True))
         # Its parent
         parents = BFS(n, adj_list)[1]
         # And the create the edges
-        for i in range(1, maxim+1):
+        for i in range(maxim+1):
             next_step = df[df[n] == i].index.tolist()
             for ns in next_step:
                 edges_list[n].append((parents[ns], ns))
@@ -176,17 +178,21 @@ def print_bfs(nods, rt, adj, data ):
     # Draw the graph
     #nx.draw(G, pos, with_labels = True)
     levels = BFS(rt, adj)[0]
-    maxs = data[rt].max(0) 
+    maxs = int(data[rt].max(0)) 
+    #print maxs
     colors = ['#%06X' % randint(0, 0xFFFFFF) for i in range(10)]  
     nx.draw_networkx_nodes(G,pos,
                        nodelist=[rt],
                        node_color= 'r',
                        node_size=500, alpha = 0.8)
+    nod = [i for i in levels.keys()]
     for i in range(1,maxs+1):
         nx.draw_networkx_nodes(G,pos,
-                       nodelist=[k for k in nods if levels[k] == i],
+                       nodelist=[k for k in nod if levels[k] == i],
                        node_color= colors[i],
                        node_size=500, alpha = 0.8)
+        #except:
+            #continue
     
     nx.draw_networkx_edges(G,pos,
                        edgelist=create_edges(nods, adj, data)[rt],
