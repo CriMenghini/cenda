@@ -5,7 +5,7 @@ Created on Tue May 10 15:09:06 2016
 @author: michele
 """
 
-from library import *
+from library_NEW import *
 from fatTree import *
 
 ## prima domanda al prof.
