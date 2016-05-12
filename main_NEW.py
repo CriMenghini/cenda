@@ -13,7 +13,7 @@ from fatTree import *
 tipo1 = 1==int(raw_input("Would you like to use: \n 1: Random Graph(n,p) \n 2: Regular Random Graph (n,m) \n [1/2]: "))
 
 #nodi
-n=int(raw_input('\nNumber of node? (Suggested less then 250, unless the computation of eigenvalues will be slow)\n'))
+n=int(raw_input('\nNumber of node? (Suggested less then 250, unless the computation will be slow)\n'))
 
 
 if tipo1: 
@@ -78,7 +78,6 @@ op=int(raw_input('\nType:\n 0: To see the FatTree implementation \n 1: To stop \
 
 if op == 0:
     main()
-else:
-    print 'Cenda thanks you. Goodbye!'
+
 
 print 'Cenda thanks you. Goodbye!'

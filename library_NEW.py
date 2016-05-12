@@ -15,6 +15,7 @@ from numpy import linalg as LA
 from scipy.sparse import dok_matrix
 import pandas as pd
 from random import randint
+import time
 
 def r_graph(n=10,p=0.3):
     adj=np.random.choice(2,[n,n],p=[1-np.sqrt(p),np.sqrt(p)])
@@ -180,7 +181,7 @@ def print_bfs(nods, rt, adj, data ):
     levels = BFS(rt, adj)[0]
     maxs = int(data[rt].max(0)) 
     #print maxs
-    colors = ['#%06X' % randint(0, 0xFFFFFF) for i in range(10)]  
+    colors = ['#%06X' % randint(0, 0xFFFFFF) for i in range(10000)]  
     nx.draw_networkx_nodes(G,pos,
                        nodelist=[rt],
                        node_color= 'r',
@@ -204,6 +205,7 @@ def print_bfs(nods, rt, adj, data ):
 
 #funzione per trovare connettività con matrice di adiacenza sparse
 def testConnectIrredA(g):
+	begin = time.time()
 	print ''
 	print '-----'
 	n = len(g.nodes())
@@ -221,6 +223,9 @@ def testConnectIrredA(g):
 	for i in range(0,n):
 		for j in range(0,n):
 			boolean = boolean and somma[i,j] > 0
+	print ''
+	print 'elapsed time:', time.time() - begin,' s'
+	print ''
 	if boolean:
 		print 'Every value of the computed matrix is positive,'
 		print 'then the graph is connected'
@@ -235,6 +240,7 @@ def testConnectIrredA(g):
 
 #funzione per trovare connettività con laplaciana
 def testConnectLapEig(g):
+	begin = time.time()
 	print ''
 	print '-----'
 	n = len(g.nodes())
@@ -249,17 +255,32 @@ def testConnectLapEig(g):
 			L[x,x] = g.degree(x)
 	w, v = LA.eig(L)
 	w = sorted(list(w))
-	print 'the eigen values of L are:'
+	print ''
+	print 'elapsed time:', time.time() - begin,' s'
+	print ''
+	print 'the eigenvalues of L are:'
 	c = 0
 	for x in w:
-		print float(np.where(x < 1e-15, 0, x))
+		if np.iscomplex(x):
+			print 'Complex eigenvalue:',x
+		else:
+			print float(np.where(x < 1e-10, 0, x))
 		c = c + 1
 		if c == 4:
 			print 'and more..'
 			break
-	seconSmallestEig = float(np.where(w[1] < 1e-15, 0, w[1]))
-	print ''
-	print 'the second smallest eigenvalue is:', seconSmallestEig
+
+	if np.iscomplex(w[1]):
+		print ''
+		print 'the second smallest eigenvalue is complex:', w[1]
+		print ''
+		seconSmallestEig = np.real(w[1])
+	else:
+		seconSmallestEig = float(np.where(w[1] < 1e-10, 0, w[1]))
+		print ''
+		print 'the second smallest eigenvalue is:', seconSmallestEig
+		print ''
+	
 	if seconSmallestEig > 0 :
 		print 'which is positive: the graph is connected'
 		print '-----'
@@ -275,6 +296,7 @@ def testConnectLapEig(g):
 #funzione per trovare connettività con BFS	
 	
 def testConnectBFS(g):
+	begin = time.time()
 	Adj = {n : g.neighbors(n) for n in g.nodes()}
 	level = BFS(g.nodes()[0], Adj)[0]
 	print ''
@@ -282,6 +304,9 @@ def testConnectBFS(g):
 	print '# of explored nodes', len(level.keys())
 	print '# of total nodes', len(g.nodes())
 	boool = len(level.keys()) == len(g.nodes())
+	print ''
+	print 'elapsed time:', time.time() - begin,' s'
+	print ''
 	if boool:
 		print 'the graph is connected since we have explored all nodes'
 		print '-----'
