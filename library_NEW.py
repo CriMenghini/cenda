@@ -243,6 +243,7 @@ def testConnectLapEig(g):
 	begin = time.time()
 	print ''
 	print '-----'
+	print 'Computing eigenvalues of L..'
 	n = len(g.nodes())
 	L = np.zeros((n,n))
 	for x,i in g.edges():
