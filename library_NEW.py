@@ -180,7 +180,7 @@ def print_bfs(nods, rt, adj, data ):
     levels = BFS(rt, adj)[0]
     maxs = int(data[rt].max(0)) 
     #print maxs
-    colors = ['#%06X' % randint(0, 0xFFFFFF) for i in range(10)]  
+    colors = ['#%06X' % randint(0, 0xFFFFFF) for i in range(10000)]  
     nx.draw_networkx_nodes(G,pos,
                        nodelist=[rt],
                        node_color= 'r',
