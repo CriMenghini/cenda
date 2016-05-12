@@ -39,11 +39,15 @@ if ins == int(0):
     print BFS(2,Adj)
 else:
     print '\n \n BFS performed on each node of the graph'
-    print pd.DataFrame.from_dict(BFS_all_nodes(g.nodes(), Adj))
+    graphs = pd.DataFrame.from_dict(BFS_all_nodes(g.nodes(), Adj), orient = 'index')
+    graphs[graphs.isnull()]=-1
+    graphs[(graphs==-1)]='inf'
+    print graphs
 
 root = int(raw_input('\n Choose a root( between 0 and the number of nodes-1) to perform the BFS algorithm and draw the obtained graph:'))
 
 graphs = pd.DataFrame.from_dict(BFS_all_nodes(g.nodes(), Adj))
+graphs[graphs.isnull()]=-1
 print_bfs(g.nodes(), root , Adj, graphs)
 
 print "testing connectivity of graphs.."
