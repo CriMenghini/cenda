@@ -22,4 +22,16 @@ Some graph models and algorithms to be applied on Data Center topology
  - Generate a fat tree topology graph 
  - Find all paths connecting a given source ToR and a given destination ToR.
  - Find all disjoint paths connecting a given source ToR and a given destination ToR.
+ 
+#### To run the code
+
+Once you are located in the folder you download:
+
+* type: python main_NEW.py to run the entire code.
+
+#### To inspect the code
+
+* library.py : is the code related to Part 1,2 and 3;
+* fatTree.py : is the code related to Part 4;
+* main_NEW.py : is the code to run to perform the algorithms.
 
