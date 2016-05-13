@@ -75,6 +75,44 @@ def print_graph(g, special=False,old_new=[]):
         nx.draw_networkx_edges(g,pos,edgelist=[(old_new[0],old_new[1]),(old_new[0],old_new[2]),(old_new[1],old_new[3])],edge_color=['r','b','b'],width=3.0,alpha=0.5)
     nx.draw_networkx_edges(g,pos,width=1.0,alpha=0.5)
     plt.show()
+   
+def prob_connectivity(n,p):
+    
+    import sympy as sy
+    
+    def disc_prob_n (n,p,connection):
+        a=0
+        for i in range(1,n):
+            a+= connection[i]*sy.binomial(n-1,i-1)*(1-p)**(i*(n-i))
+        return a
+    
+    def con_prob_n (n,p):
+        connection={}
+        connection[1]=1
+        for i in range(2,n+1):
+            connection[i]=1-disc_prob_n(i,p,connection)
+        return connection[n]
+        
+    import numpy as np
+    import matplotlib.pyplot as plt
+    
+    f=np.vectorize(con_prob_n)
+    x=np.arange(0.015,0.1,0.005)
+    y=f(n,p=x)
+    
+    x0=x[y>0.99][0]
+    y0=y[y>0.99][0]
+    plt.plot(x,y,'-',linewidth=3)
+    plt.ylim(0,1)
+    plt.yticks([0.99]+list(np.arange(0,1,0.1)))
+    plt.xticks(list(np.arange(0,0.1,0.01)))
+    plt.xlabel('p of existing for each possible edge')
+    plt.ylabel('p for the graph to be connected')
+    plt.title('P{ Random Graph(n,p) is connected }',size=20,color='darkred',y=1.08)
+    plt.plot([x0,x0],[0,y0],'k-',color='r')
+    plt.plot([0,x0],[y0,y0],'k-',color='r')
+    plt.plot(x0,y0,'o',linewidth=3, color='r')
+    plt.show()
 	
 def BFS(root, adjecency_list):
     """This function returns a dictionary whose keys are the nodes and the values are the respective 
