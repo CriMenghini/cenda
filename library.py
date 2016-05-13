@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Fri May 13 09:35:31 2016
+
+@author: michele
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Tue May 10 14:57:22 2016
 
 @author: michele
@@ -15,10 +22,11 @@ from numpy import linalg as LA
 from scipy.sparse import dok_matrix
 import pandas as pd
 from random import randint
+import time
 
 def r_graph(n=10,p=0.3):
-    adj=np.random.choice([1,0],[n,n],np.sqrt(p))
-    np.fill_diagonal(adj,1)
+    adj=np.random.choice(2,[n,n],p=[1-np.sqrt(p),np.sqrt(p)])
+    np.fill_diagonal(adj,0)
     adj=adj*(adj.T)
     g=nx.from_numpy_matrix(adj)
     print_graph(g)
@@ -73,6 +81,44 @@ def print_graph(g, special=False,old_new=[]):
     if special:
         nx.draw_networkx_edges(g,pos,edgelist=[(old_new[0],old_new[1]),(old_new[0],old_new[2]),(old_new[1],old_new[3])],edge_color=['r','b','b'],width=3.0,alpha=0.5)
     nx.draw_networkx_edges(g,pos,width=1.0,alpha=0.5)
+    plt.show()
+   
+def prob_connectivity(n,p):
+    
+    import sympy as sy
+    
+    def disc_prob_n (n,p,connection):
+        a=0
+        for i in range(1,n):
+            a+= connection[i]*sy.binomial(n-1,i-1)*(1-p)**(i*(n-i))
+        return a
+    
+    def con_prob_n (n,p):
+        connection={}
+        connection[1]=1
+        for i in range(2,n+1):
+            connection[i]=1-disc_prob_n(i,p,connection)
+        return connection[n]
+        
+    import numpy as np
+    import matplotlib.pyplot as plt
+    
+    f=np.vectorize(con_prob_n)
+    x=np.arange(0.015,0.1,0.005)
+    y=f(n,p=x)
+    
+    x0=x[y>0.99][0]
+    y0=y[y>0.99][0]
+    plt.plot(x,y,'-',linewidth=3)
+    plt.ylim(0,1)
+    plt.yticks([0.99]+list(np.arange(0,1,0.1)))
+    plt.xticks(list(np.arange(0,0.1,0.01)))
+    plt.xlabel('p of existing for each possible edge')
+    plt.ylabel('p for the graph to be connected')
+    plt.title('P{ Random Graph(n,p) is connected }',size=20,color='darkred',y=1.08)
+    plt.plot([x0,x0],[0,y0],'k-',color='r')
+    plt.plot([0,x0],[y0,y0],'k-',color='r')
+    plt.plot(x0,y0,'o',linewidth=3, color='r')
     plt.show()
 	
 def BFS(root, adjecency_list):
@@ -180,7 +226,7 @@ def print_bfs(nods, rt, adj, data ):
     levels = BFS(rt, adj)[0]
     maxs = int(data[rt].max(0)) 
     #print maxs
-    colors = ['#%06X' % randint(0, 0xFFFFFF) for i in range(10)]  
+    colors = ['#%06X' % randint(0, 0xFFFFFF) for i in range(10000)]  
     nx.draw_networkx_nodes(G,pos,
                        nodelist=[rt],
                        node_color= 'r',
@@ -204,6 +250,7 @@ def print_bfs(nods, rt, adj, data ):
 
 #funzione per trovare connettività con matrice di adiacenza sparse
 def testConnectIrredA(g):
+	begin = time.time()
 	print ''
 	print '-----'
 	n = len(g.nodes())
@@ -221,6 +268,9 @@ def testConnectIrredA(g):
 	for i in range(0,n):
 		for j in range(0,n):
 			boolean = boolean and somma[i,j] > 0
+	print ''
+	print 'elapsed time:', time.time() - begin,' s'
+	print ''
 	if boolean:
 		print 'Every value of the computed matrix is positive,'
 		print 'then the graph is connected'
@@ -235,8 +285,10 @@ def testConnectIrredA(g):
 
 #funzione per trovare connettività con laplaciana
 def testConnectLapEig(g):
+	begin = time.time()
 	print ''
 	print '-----'
+	print 'Computing eigenvalues of L..'
 	n = len(g.nodes())
 	L = np.zeros((n,n))
 	for x,i in g.edges():
@@ -249,17 +301,32 @@ def testConnectLapEig(g):
 			L[x,x] = g.degree(x)
 	w, v = LA.eig(L)
 	w = sorted(list(w))
-	print 'the eigen values of L are:'
+	print ''
+	print 'elapsed time:', time.time() - begin,' s'
+	print ''
+	print 'the eigenvalues of L are:'
 	c = 0
 	for x in w:
-		print float(np.where(x < 1e-15, 0, x))
+		if np.iscomplex(x):
+			print 'Complex eigenvalue:',x
+		else:
+			print float(np.where(x < 1e-10, 0, x))
 		c = c + 1
 		if c == 4:
 			print 'and more..'
 			break
-	seconSmallestEig = float(np.where(w[1] < 1e-15, 0, w[1]))
-	print ''
-	print 'the second smallest eigenvalue is:', seconSmallestEig
+
+	if np.iscomplex(w[1]):
+		print ''
+		print 'the second smallest eigenvalue is complex:', w[1]
+		print ''
+		seconSmallestEig = np.real(w[1])
+	else:
+		seconSmallestEig = float(np.where(w[1] < 1e-10, 0, w[1]))
+		print ''
+		print 'the second smallest eigenvalue is:', seconSmallestEig
+		print ''
+	
 	if seconSmallestEig > 0 :
 		print 'which is positive: the graph is connected'
 		print '-----'
@@ -275,6 +342,7 @@ def testConnectLapEig(g):
 #funzione per trovare connettività con BFS	
 	
 def testConnectBFS(g):
+	begin = time.time()
 	Adj = {n : g.neighbors(n) for n in g.nodes()}
 	level = BFS(g.nodes()[0], Adj)[0]
 	print ''
@@ -282,6 +350,9 @@ def testConnectBFS(g):
 	print '# of explored nodes', len(level.keys())
 	print '# of total nodes', len(g.nodes())
 	boool = len(level.keys()) == len(g.nodes())
+	print ''
+	print 'elapsed time:', time.time() - begin,' s'
+	print ''
 	if boool:
 		print 'the graph is connected since we have explored all nodes'
 		print '-----'
@@ -291,3 +362,42 @@ def testConnectBFS(g):
 		print '-----'
 		return False
 	
+
+def prob_connectivity(n=100):
+    
+    import sympy as sy
+    
+    def disc_prob_n (n,p,connection):
+        a=0
+        for i in range(1,n):
+            a+= connection[i]*sy.binomial(n-1,i-1)*(1-p)**(i*(n-i))
+        return a
+    
+    def con_prob_n (n,p):
+        connection={}
+        connection[1]=1
+        for i in range(2,n+1):
+            connection[i]=1-disc_prob_n(i,p,connection)
+        return connection[n]
+        
+    import numpy as np
+    import matplotlib.pyplot as plt
+    
+    f=np.vectorize(con_prob_n)
+    x=np.arange(0.015,0.1,0.005)
+    y=f(n,p=x)
+    
+    x0=x[y>0.99][0]
+    y0=y[y>0.99][0]
+    plt.plot(x,y,'-',linewidth=3)
+    plt.ylim(0,1)
+    plt.yticks([0.99]+list(np.arange(0,1,0.1)))
+    plt.xticks(list(np.arange(0,0.1,0.01)))
+    plt.xlabel('p of existing for each possible edge (n=100)')
+    plt.ylabel('p for the graph to be connected')
+    plt.title('P{ Random Graph(n,p) is connected }',size=20,color='darkred',y=1.08)
+    plt.plot([x0,x0],[0,y0],'k-',color='r')
+    plt.plot([0,x0],[y0,y0],'k-',color='r')
+    plt.plot(x0,y0,'o',linewidth=3, color='r')
+    plt.text(0.005,0.85,r"$ f(n)=1-\sum_{i=1}^{n-1}f(i)\binom{n-1}{i-1} (1-p)^{i(n-i)}$",fontsize=16,bbox={'facecolor':'red', 'alpha':0.5, 'pad':5})
+    plt.show()
