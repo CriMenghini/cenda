@@ -8,6 +8,7 @@ Created on Tue May 10 15:09:06 2016
 from library_NEW import *
 from fatTree import *
 
+prob_connectivity(n)
 ## prima domanda al prof.
 #tipo1 è una variabile booleana, true se dice che vuole solo random_graph(n,p false se vuole il regular_random_graph)
 tipo1 = 1==int(raw_input("Would you like to use: \n 1: Random Graph(n,p) \n 2: Regular Random Graph (n,m) \n [1/2]: "))
